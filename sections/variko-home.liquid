@@ -1,0 +1,222 @@
+{% liquid
+  assign product = section.settings.featured_product
+  if product != blank
+    assign variant = product.selected_or_first_available_variant
+  endif
+%}
+
+<main class="variko" id="inicio">
+  <div class="variko__announcement">
+    <p>{{ 'variko.announcement' | t }}</p>
+  </div>
+
+  <header class="variko__header">
+    <a class="variko__brand" href="{{ routes.root_url }}" aria-label="{{ shop.name | escape }}">
+      <span class="variko__mark" aria-hidden="true"><i></i><b></b><em></em></span>
+      <span>{{ shop.name | upcase | default: 'VARIKO' }}</span>
+    </a>
+    <nav aria-label="{{ 'variko.navigation' | t }}">
+      <a href="#ritual">{{ 'variko.nav_product' | t }}</a>
+      <a href="#manifiesto">{{ 'variko.nav_approach' | t }}</a>
+      <a href="#preguntas">{{ 'variko.nav_faq' | t }}</a>
+    </nav>
+    <a class="variko__cart" href="{{ routes.cart_url }}" aria-label="{{ 'variko.cart' | t }}">
+      <span>{{ 'variko.cart' | t }}</span><sup>{{ cart.item_count }}</sup>
+    </a>
+  </header>
+
+  <section class="variko__hero" aria-labelledby="variko-title">
+    <div class="variko__hero-copy">
+      <p class="variko__eyebrow"><span></span>{{ 'variko.eyebrow' | t }}</p>
+      <h1 id="variko-title">{{ 'variko.hero_title' | t }}</h1>
+      <p class="variko__lead">{{ 'variko.hero_lead' | t }}</p>
+      <div class="variko__actions">
+        <a class="variko__button variko__button--primary" href="#ritual">{{ 'variko.hero_cta' | t }}</a>
+        <a class="variko__text-link" href="#manifiesto">{{ 'variko.hero_link' | t }} <span aria-hidden="true">↘</span></a>
+      </div>
+      <ul class="variko__proof" role="list">
+        <li>{{ 'variko.proof_one' | t }}</li>
+        <li>{{ 'variko.proof_two' | t }}</li>
+        <li>{{ 'variko.proof_three' | t }}</li>
+      </ul>
+    </div>
+    <div class="variko__hero-art" aria-hidden="true">
+      <span class="variko__sun"></span>
+      <span class="variko__orb variko__orb--one"></span>
+      <span class="variko__orb variko__orb--two"></span>
+      <div class="variko__large-mark"><i></i><b></b><em></em></div>
+      <p>V / 01</p>
+    </div>
+  </section>
+
+  <section class="variko__product" id="ritual" aria-labelledby="ritual-title">
+    <div class="variko__section-intro">
+      <p class="variko__eyebrow"><span></span>{{ 'variko.product_eyebrow' | t }}</p>
+      <h2 id="ritual-title">{{ 'variko.product_title' | t }}</h2>
+      <p>{{ 'variko.product_lead' | t }}</p>
+    </div>
+
+    {% if product != blank %}
+      <article class="variko__product-card">
+        <div class="variko__product-image">
+          {% if product.featured_image != blank %}
+            {{ product.featured_image | image_url: width: 1100 | image_tag: loading: 'lazy', widths: '480, 720, 1100', alt: product.title }}
+          {% else %}
+            {{ 'product-1' | placeholder_svg_tag: 'variko__placeholder' }}
+          {% endif %}
+          <span>{{ 'variko.product_badge' | t }}</span>
+        </div>
+        <div class="variko__product-details">
+          <p class="variko__product-kicker">{{ 'variko.product_kicker' | t }}</p>
+          <h3>{{ product.title }}</h3>
+          <div class="variko__price">{{ variant.price | money }}</div>
+          <p class="variko__product-description">{{ product.description | strip_html | truncate: 160 }}</p>
+          {% form 'product', product, class: 'variko__form' %}
+            <input type="hidden" name="id" value="{{ variant.id }}">
+            <button class="variko__button variko__button--primary" type="submit" {% unless variant.available %}disabled{% endunless %}>
+              {% if variant.available %}{{ 'variko.add_to_bag' | t }}{% else %}{{ 'variko.sold_out' | t }}{% endif %}
+            </button>
+            {{ form | payment_button }}
+          {% endform %}
+          <p class="variko__product-note">{{ 'variko.product_note' | t }}</p>
+        </div>
+      </article>
+    {% else %}
+      <div class="variko__coming-soon">
+        <span class="variko__coming-orbit" aria-hidden="true"></span>
+        <p class="variko__product-kicker">{{ 'variko.product_kicker' | t }}</p>
+        <h3>{{ 'variko.coming_title' | t }}</h3>
+        <p>{{ 'variko.coming_copy' | t }}</p>
+      </div>
+    {% endif %}
+  </section>
+
+  <section class="variko__principles" id="manifiesto" aria-labelledby="principles-title">
+    <div>
+      <p class="variko__eyebrow"><span></span>{{ 'variko.principles_eyebrow' | t }}</p>
+      <h2 id="principles-title">{{ 'variko.principles_title' | t }}</h2>
+    </div>
+    <div class="variko__principle-list">
+      <article><span>01</span><h3>{{ 'variko.principle_one_title' | t }}</h3><p>{{ 'variko.principle_one_copy' | t }}</p></article>
+      <article><span>02</span><h3>{{ 'variko.principle_two_title' | t }}</h3><p>{{ 'variko.principle_two_copy' | t }}</p></article>
+      <article><span>03</span><h3>{{ 'variko.principle_three_title' | t }}</h3><p>{{ 'variko.principle_three_copy' | t }}</p></article>
+    </div>
+  </section>
+
+  <section class="variko__faq" id="preguntas" aria-labelledby="faq-title">
+    <div>
+      <p class="variko__eyebrow"><span></span>{{ 'variko.faq_eyebrow' | t }}</p>
+      <h2 id="faq-title">{{ 'variko.faq_title' | t }}</h2>
+    </div>
+    <div>
+      <details open><summary>{{ 'variko.faq_one_question' | t }}</summary><p>{{ 'variko.faq_one_answer' | t }}</p></details>
+      <details><summary>{{ 'variko.faq_two_question' | t }}</summary><p>{{ 'variko.faq_two_answer' | t }}</p></details>
+      <details><summary>{{ 'variko.faq_three_question' | t }}</summary><p>{{ 'variko.faq_three_answer' | t }}</p></details>
+    </div>
+  </section>
+
+  <footer class="variko__footer">
+    <a class="variko__brand" href="{{ routes.root_url }}"><span class="variko__mark" aria-hidden="true"><i></i><b></b><em></em></span><span>{{ shop.name | upcase | default: 'VARIKO' }}</span></a>
+    <p>{{ 'variko.footer' | t }}</p>
+  </footer>
+</main>
+
+{% stylesheet %}
+  :root { --ink: #112942; --paper: #f8f5ef; --foam: #eaf3ef; --mint: #7ed9bd; --coral: #f47e6d; --line: rgba(17, 41, 66, .16); }
+  * { box-sizing: border-box; }
+  html { scroll-behavior: smooth; }
+  body { margin: 0; background: var(--paper); color: var(--ink); font-family: Arial, Helvetica, sans-serif; }
+  .variko { overflow: hidden; }
+  .variko__announcement { background: var(--ink); color: #fff; padding: 10px 24px; text-align: center; font-size: 12px; letter-spacing: .08em; text-transform: uppercase; }
+  .variko__announcement p { margin: 0; }
+  .variko__header { max-width: 1280px; margin: auto; min-height: 82px; padding: 0 36px; display: flex; align-items: center; justify-content: space-between; gap: 24px; }
+  .variko__brand { color: var(--ink); display: inline-flex; align-items: center; gap: 9px; text-decoration: none; font-size: 20px; font-weight: 800; letter-spacing: .12em; }
+  .variko__mark, .variko__large-mark { display: inline-block; position: relative; width: 25px; height: 29px; }
+  .variko__mark i, .variko__mark b, .variko__large-mark i, .variko__large-mark b { position: absolute; bottom: 1px; width: 8px; border-radius: 99px; content: ''; }
+  .variko__mark i, .variko__large-mark i { height: 24px; background: var(--ink); transform: rotate(31deg); left: 5px; }
+  .variko__mark b, .variko__large-mark b { height: 24px; background: var(--mint); transform: rotate(-31deg); right: 5px; }
+  .variko__mark em, .variko__large-mark em { position: absolute; width: 7px; height: 7px; border-radius: 50%; background: var(--coral); top: 0; left: 9px; }
+  .variko__header nav { display: flex; gap: 28px; }
+  .variko__header nav a, .variko__cart { color: var(--ink); text-decoration: none; font-size: 14px; }
+  .variko__cart { border: 1px solid var(--line); border-radius: 999px; padding: 10px 14px; display: flex; gap: 6px; align-items: start; }
+  .variko__cart sup { color: var(--coral); font-weight: 700; }
+  .variko__hero { min-height: 650px; max-width: 1280px; margin: auto; padding: 56px 36px 72px; display: grid; grid-template-columns: 1.05fr .95fr; align-items: center; gap: 40px; }
+  .variko__eyebrow { color: #52706f; font-size: 12px; letter-spacing: .14em; text-transform: uppercase; margin: 0 0 18px; display: flex; align-items: center; gap: 8px; font-weight: 700; }
+  .variko__eyebrow span { width: 26px; height: 2px; background: var(--coral); display: inline-block; }
+  .variko h1, .variko h2, .variko h3 { font-family: Georgia, 'Times New Roman', serif; font-weight: 400; letter-spacing: -.04em; }
+  .variko h1 { font-size: clamp(56px, 8vw, 104px); line-height: .92; max-width: 720px; margin: 0; }
+  .variko__lead { max-width: 480px; font-size: 19px; line-height: 1.6; margin: 28px 0; color: #476071; }
+  .variko__actions { display: flex; gap: 24px; align-items: center; flex-wrap: wrap; }
+  .variko__button { border: 0; cursor: pointer; display: inline-flex; justify-content: center; align-items: center; border-radius: 16px; min-height: 54px; padding: 14px 23px; text-decoration: none; font-weight: 700; font-size: 14px; transition: transform .2s ease, box-shadow .2s ease, background .2s ease; }
+  .variko__button--primary { background: var(--ink); color: #fff; box-shadow: 0 9px 20px rgba(17, 41, 66, .16); }
+  .variko__button--primary:hover { transform: translateY(-2px); background: #1a3e63; box-shadow: 0 12px 28px rgba(17, 41, 66, .23); }
+  .variko__button:disabled { cursor: not-allowed; opacity: .5; }
+  .variko__text-link { color: var(--ink); text-underline-offset: 5px; font-weight: 700; }
+  .variko__text-link span { color: var(--coral); font-size: 18px; }
+  .variko__proof { display: flex; flex-wrap: wrap; gap: 16px; padding: 0; margin: 44px 0 0; list-style: none; font-size: 12px; color: #54706f; }
+  .variko__proof li::before { content: '•'; color: var(--coral); padding-right: 6px; }
+  .variko__hero-art { aspect-ratio: 1; max-width: 530px; width: 100%; justify-self: end; background: var(--foam); border-radius: 47% 53% 41% 59% / 49% 43% 57% 51%; position: relative; overflow: hidden; display: grid; place-items: center; }
+  .variko__sun { width: 235px; height: 235px; border-radius: 50%; background: #d8f1df; position: absolute; top: 14%; right: 12%; }
+  .variko__orb { position: absolute; border-radius: 50%; }
+  .variko__orb--one { background: var(--coral); width: 64px; height: 64px; bottom: 20%; left: 14%; }
+  .variko__orb--two { border: 1px solid var(--ink); width: 118px; height: 118px; right: -25px; bottom: 10%; }
+  .variko__large-mark { z-index: 1; transform: scale(7.2); }
+  .variko__hero-art p { position: absolute; bottom: 18px; right: 24px; font-size: 12px; letter-spacing: .15em; }
+  .variko__product { background: var(--ink); padding: 112px max(36px, calc((100vw - 1208px) / 2)); color: #fefcf8; }
+  .variko__section-intro { display: grid; grid-template-columns: 1fr 1fr; gap: 36px; margin-bottom: 48px; }
+  .variko__section-intro .variko__eyebrow { color: var(--mint); }
+  .variko__section-intro h2, .variko__principles h2, .variko__faq h2 { font-size: clamp(42px, 5vw, 70px); line-height: .96; margin: 0; }
+  .variko__section-intro > p { max-width: 420px; font-size: 17px; line-height: 1.6; color: #c5d5dc; align-self: end; margin: 0; }
+  .variko__product-card { background: #f5f3ee; color: var(--ink); display: grid; grid-template-columns: 1fr 1fr; border-radius: 28px; overflow: hidden; }
+  .variko__product-image { min-height: 500px; position: relative; background: #d7eee8; display: grid; place-items: center; }
+  .variko__product-image img { width: 100%; height: 100%; object-fit: cover; position: absolute; inset: 0; }
+  .variko__placeholder { width: 60%; height: auto; opacity: .45; }
+  .variko__product-image > span { position: absolute; top: 22px; left: 22px; background: var(--paper); color: var(--ink); padding: 9px 12px; border-radius: 99px; font-size: 11px; font-weight: 700; letter-spacing: .08em; text-transform: uppercase; }
+  .variko__product-details { padding: clamp(36px, 6vw, 78px); display: flex; flex-direction: column; align-items: flex-start; }
+  .variko__product-kicker { color: #5a7977; text-transform: uppercase; font-size: 12px; font-weight: 700; letter-spacing: .13em; margin: 0 0 12px; }
+  .variko__product-details h3 { font-size: clamp(36px, 4vw, 58px); line-height: .96; margin: 0; }
+  .variko__price { font-size: 22px; margin: 24px 0 12px; font-weight: 700; }
+  .variko__product-description { line-height: 1.55; color: #506775; }
+  .variko__form { width: 100%; margin-top: 14px; }
+  .variko__form .variko__button { width: 100%; }
+  .shopify-payment-button { margin-top: 10px; }
+  .variko__product-note { color: #597171; font-size: 12px; line-height: 1.45; margin-top: 17px; }
+  .variko__coming-soon { min-height: 390px; border: 1px solid rgba(255,255,255,.26); border-radius: 28px; padding: 64px; position: relative; overflow: hidden; max-width: 760px; }
+  .variko__coming-soon h3 { font-size: clamp(36px, 5vw, 62px); margin: 0; max-width: 480px; }
+  .variko__coming-soon p:not(.variko__product-kicker) { max-width: 430px; color: #c5d5dc; line-height: 1.6; }
+  .variko__coming-orbit { position: absolute; width: 300px; height: 300px; border: 1px solid var(--mint); border-radius: 50%; right: -95px; bottom: -135px; }
+  .variko__principles, .variko__faq { max-width: 1280px; margin: auto; padding: 118px 36px; display: grid; grid-template-columns: .8fr 1.2fr; gap: 78px; }
+  .variko__principle-list { border-top: 1px solid var(--line); }
+  .variko__principle-list article { display: grid; grid-template-columns: 70px 1fr 1.35fr; gap: 20px; align-items: start; padding: 24px 0; border-bottom: 1px solid var(--line); }
+  .variko__principle-list span { color: var(--coral); font-size: 12px; font-weight: 700; }
+  .variko__principle-list h3 { margin: 0; font-size: 26px; }
+  .variko__principle-list p { margin: 3px 0; color: #597171; line-height: 1.55; }
+  .variko__faq { padding-top: 0; }
+  .variko__faq > div:last-child { border-top: 1px solid var(--line); }
+  .variko__faq details { border-bottom: 1px solid var(--line); padding: 19px 0; }
+  .variko__faq summary { cursor: pointer; font-size: 17px; font-weight: 700; list-style: none; padding-right: 32px; position: relative; }
+  .variko__faq summary::after { content: '+'; color: var(--coral); position: absolute; right: 2px; font-size: 25px; top: -7px; font-weight: 400; }
+  .variko__faq details[open] summary::after { content: '–'; }
+  .variko__faq details p { margin: 14px 0 0; max-width: 570px; color: #597171; line-height: 1.55; }
+  .variko__footer { border-top: 1px solid var(--line); padding: 34px max(36px, calc((100vw - 1208px) / 2)); display: flex; justify-content: space-between; align-items: center; gap: 20px; }
+  .variko__footer p { margin: 0; color: #597171; font-size: 13px; }
+  @media (max-width: 760px) {
+    .variko__header { padding: 0 18px; min-height: 70px; } .variko__header nav { display: none; } .variko__brand { font-size: 17px; }
+    .variko__hero { grid-template-columns: 1fr; padding: 42px 22px 60px; } .variko__hero-art { justify-self: start; max-width: 420px; } .variko__proof { gap: 9px 14px; }
+    .variko__product { padding: 75px 22px; } .variko__section-intro, .variko__product-card, .variko__principles, .variko__faq { grid-template-columns: 1fr; } .variko__section-intro { gap: 16px; }
+    .variko__product-image { min-height: 330px; } .variko__coming-soon { padding: 42px 28px; } .variko__principles, .variko__faq { padding: 75px 22px; gap: 40px; }
+    .variko__principle-list article { grid-template-columns: 48px 1fr; } .variko__principle-list p { grid-column: 2; } .variko__footer { padding: 28px 22px; align-items: flex-start; flex-direction: column; }
+  }
+{% endstylesheet %}
+
+{% schema %}
+{
+  "name": "t:variko.section_name",
+  "settings": [
+    { "type": "product", "id": "featured_product", "label": "t:variko.featured_product" }
+  ],
+  "presets": [
+    { "name": "t:variko.section_name" }
+  ]
+}
+{% endschema %}
