@@ -1,0 +1,9 @@
+{
+  "sections": {
+    "main": {
+      "type": "variko-home",
+      "settings": {}
+    }
+  },
+  "order": ["main"]
+}
