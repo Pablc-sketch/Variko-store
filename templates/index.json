@@ -2,7 +2,9 @@
   "sections": {
     "main": {
       "type": "variko-home",
-      "settings": {}
+      "settings": {
+        "featured_product": "magnesio-complex-4-en-1-1000mg-60-caps"
+      }
     }
   },
   "order": ["main"]
